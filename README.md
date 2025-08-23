@@ -1,8 +1,11 @@
-# VFT_SMF   虚拟试飞仿真与建模框架
+# VFT_SMF   虚拟试飞-飞行场景建模标准架构 Virtual Flight Testing - Scenario Modelling Frame
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+
+## 🚀 开发者团队
+南京航空航天大学虚拟试飞开源项目团队。
 
 ## 🚀 概述
 
