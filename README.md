@@ -1,4 +1,4 @@
-# VFT_SMF V3 - 虚拟试飞仿真与建模框架
+# VFT_SMF - 虚拟试飞仿真与建模框架
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
@@ -6,7 +6,7 @@
 
 ## 🚀 概述
 
-VFT_SMF V3 是一个专为虚拟试飞实验设计的综合性开源飞行仿真平台。它采用先进的数字孪生架构，结合事件驱动多线程仿真，支持大规模分布式仿真系统，实现全要素场景下的虚拟试飞实验。
+VFT_SMF 是一个专为虚拟试飞实验设计的综合性开源飞行仿真平台。它采用先进的数字孪生架构，结合事件驱动多线程仿真，支持大规模分布式仿真系统，实现全要素场景下的虚拟试飞实验。
 
 ## ✨ 核心特性
 
@@ -22,7 +22,7 @@ VFT_SMF V3 是一个专为虚拟试飞实验设计的综合性开源飞行仿真
 ### 核心组件
 
 ```
-VFT_SMF V3/
+VFT_SMF/
 ├── src/                           # 源代码
 │   ├── A_PilotAgentModel/         # 飞行员代理模型
 │   ├── B_AircraftAgentModel/      # 飞机数字孪生模型
@@ -163,7 +163,7 @@ cd codetest
 
 ## 📈 项目状态
 
-- **版本**: 3.0.0
+- **版本**: 1.0.0
 - **状态**: 积极开发中
 - **最后更新**: 2024年1月
 
@@ -171,7 +171,7 @@ cd codetest
 
 ---
 
-# VFT_SMF V3 - Virtual Flight Test Simulation and Modeling Framework
+# VFT_SMF - Virtual Flight Test Simulation and Modeling Framework
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
@@ -179,7 +179,7 @@ cd codetest
 
 ## 🚀 Overview
 
-VFT_SMF V3 is a comprehensive open-source flight simulation platform designed for virtual flight testing experiments. It features a sophisticated digital twin architecture with event-driven multi-threaded simulation, supporting large-scale distributed simulation systems for comprehensive virtual flight testing scenarios.
+VFT_SMF is a comprehensive open-source flight simulation platform designed for virtual flight testing experiments. It features a sophisticated digital twin architecture with event-driven multi-threaded simulation, supporting large-scale distributed simulation systems for comprehensive virtual flight testing scenarios.
 
 ## ✨ Key Features
 
@@ -195,7 +195,7 @@ VFT_SMF V3 is a comprehensive open-source flight simulation platform designed fo
 ### Core Components
 
 ```
-VFT_SMF V3/
+VFT_SMF/
 ├── src/                           # Source code
 │   ├── A_PilotAgentModel/         # Pilot agent models
 │   ├── B_AircraftAgentModel/      # Aircraft digital twin models
@@ -336,7 +336,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📈 Project Status
 
-- **Version**: 3.0.0
+- **Version**: 1.0.0
 - **Status**: Active Development
 - **Last Updated**: January 2024
 
