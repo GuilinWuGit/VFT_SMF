@@ -1,0 +1,279 @@
+{
+  "flight_plan": {
+
+    "scenario_config": {
+      "ScenarioName": "滑行场景",
+      "Description": "虚拟飞行测试中的滑行场景",
+      "Author": "吴桂林团队",
+      "CreationDate": "2025-08-01",
+      "ScenarioType": "Virtual_Flight_Testing",
+      "Pilot_ID": "Pilot_001",
+      "Aircraft_ID": "B737_001",
+      "ATC_ID": "ATC_002",
+      "Environment_Name": "PEK_Runway_02"
+    },
+    
+    "global_initial_state": {
+      "flight_dynamics_initial_state": {
+        "description": "飞行动力学的18个状态量完整描述",
+        "position": {
+          "x": 0.0,
+          "y": 0.0, 
+          "z": 0.0,
+          "unit": "meter",
+          "coordinate_system": "NED"
+        },
+        "attitude": {
+          "roll": 0.0,
+          "pitch": 0.0,
+          "yaw": 0.0,
+          "unit": "degree"
+        },
+        "velocity": {
+          "vx": 0.0,
+          "vy": 0.0,
+          "vz": 0.0,
+          "unit": "m/s"
+        },
+        "angular_velocity": {
+          "roll_rate": 0.0,
+          "pitch_rate": 0.0,
+          "yaw_rate": 0.0,
+          "unit": "deg/s"
+        },
+        "acceleration": {
+          "ax": 0.0,
+          "ay": 0.0,
+          "az": 0.0,
+          "unit": "m/s2"
+        },
+        "angular_acceleration": {
+          "roll_acc": 0.0,
+          "pitch_acc": 0.0,
+          "yaw_acc": 0.0,
+          "unit": "deg/s2"
+        }
+      },
+      
+      "pilot_initial_state": {
+        "description": "飞行员的初始状态完整描述",
+        "pilot_state": "normal_operation",
+        "work_status": "就绪",
+        "fatigue_level": 0
+      },
+      
+      "aircraft_initial_state": {
+        "description": "飞机系统的初始状态",
+        "landing_gear_position": "down_locked",
+        "flaps_position": 0.0,
+        "throttle_position": 0.3,
+        "brake_status": "applied",            
+        "rudder_position": 0.0,
+        "aileron_position": 0.0,
+        "elevator_position": 0.0,
+        "engine_status": "idle",
+        "fuel_quantity": 10000.0,
+        "One Engine Out": "normal",
+        "Fuel Quantity": 10000.0,
+        "Oil Quantity": 1000.0
+      },
+      
+      "environment_initial_state": {
+        "description": "试飞环境的初始状态完整描述",
+        "runway_name": "PVG09",
+        "weather_condition": "sunny_clear",
+        "runway": {
+          "width": 45.0,
+          "length": 3600.0,
+          "surface_condition": "dry",
+          "friction_coefficient": 0.2
+        },
+        "weather": {
+          "temperature": 15.0,
+          "humidity": 60.0,
+          "atmospheric_pressure": 1013.25,
+          "visibility": 10000.0
+        },
+        "wind": {
+          "category": "calm",
+          "speed": 0.0,
+          "direction": 0.0,
+          "gusts": false
+        }
+      },
+      
+      "atc_control_initial_state": {
+        "description": "ATC管控体系的初始状态",
+        "atc_state": "normal_operation",
+        "controller_id": "ATC_001",
+        "work_status": "就绪",
+        "control_activated": true,
+        "runway_monitoring_activated": true,
+        "communication_ready": true,
+        "clearance_authority_available": true,
+        "monitoring_hall": {
+          "ready": true,
+          "data_initialized": true,
+          "communication_ready": true
+        },
+        "experiment_monitoring": {
+          "data_recording_active": true,
+          "real_time_analysis": true
+        }
+      }
+    },
+    
+    "logic_lines": {
+      "pilot_logic_line": {
+        "description": "虚拟飞行员的决策和操作的逻辑线",
+        "line_type": "intelligent_decision_making",
+        "logic_sequence": [
+          {
+            "event_id": 1,
+            "event_name": "TaxiClearanceReceived",
+            "description": "收到滑行许可",
+            "trigger_condition": {
+              "condition_expression": "taxi_clearance_received",
+              "description": "收到ATC滑行许可"
+            },
+            "driven_process": {
+              "controller_type": "Pilot_Manual_Control",
+              "controller_name": "TrottlePush2Max",
+              "description": "推油门控制",
+              "termination_condition":"Throttle = 1"
+            }
+
+          },
+          {
+            "event_id": 2,
+            "event_name": "StartCruise",
+            "description": "决定开始匀速滑行",
+            "trigger_condition": {
+              "condition_expression": "speed > 19.0",
+              "description": "接近目标滑行速度"
+            },
+            "driven_process": {
+              "controller_type": "Pilot_Flight_Task_Control",
+              "controller_name": "MaintainSPDRunway",
+              "description": "在跑道上匀速滑行",
+              "termination_condition":"maintain"
+            }
+
+          },
+          {
+            "event_id": 3,
+            "event_name": "StartBraking",
+            "description": "决定开始刹车",
+            "trigger_condition": {
+              "condition_expression": "distance > 900.0 || atc_brake_command_received",
+              "description": "到达制动决策点或收到ATC紧急刹车指令"
+            },
+            "driven_process": {
+              "controller_type": "Pilot_Manual_Control",
+              "controller_name": "BrakePush2Max",
+              "description": "应用最大刹车力",
+              "termination_condition":"Brake = 1"
+            }
+
+          }
+        ]
+      },
+      
+      "aircraft_system_logic_line": {
+        "description": "飞机各系统的状态变化和控制的逻辑线",
+        "line_type": "system_coordination",
+        "logic_sequence": [
+          {
+            "event_id": 1,
+            "event_name": "EncounterLeftEngineOut",
+            "description": "遭遇左发动机失效",
+            "trigger_condition": {
+              "condition_expression": "distance > 100.0",
+              "description": "飞机刚滑行100米就遇到左发动机失效"
+            },
+            "driven_process": {
+              "controller_type": "Aircraft_Sysytem_State_Shift",
+              "controller_name": "LeftEngineOut",
+              "description": "左发动机失效",
+              "termination_condition":"maintain"
+            }
+          },
+          {
+            "event_id": 2,
+            "event_name": "EncounterBreakHalf",
+            "description": "遭遇刹车效率降低",
+            "trigger_condition": {
+              "condition_expression": "distance > 1000.0",
+              "description": "飞机刚滑行1000米就遇到刹车效率降低"
+            },
+            "driven_process": {
+              "controller_type": "Aircraft_Sysytem_State_Shift",
+              "controller_name": "BreakHalf",
+              "description": "刹车效率降低",
+              "termination_condition":"maintain "
+            }
+          }
+        ]
+      },
+      
+      "environment_logic_line": {
+        "description": "环境条件的变化和影响的逻辑线",
+        "line_type": "environmental_dynamics",
+        "logic_sequence": [
+          {
+            "event_id": 1,
+            "event_name": "EncounterRunwayConditionChange",
+            "description": "遭遇跑道条件变化",
+            "trigger_condition": {
+              "condition_expression": "distance > 300.0",
+              "description": "飞机刚滑行300米就遭遇湿滑跑道"
+            },
+            "driven_process": {
+              "controller_type": "Environment_State_Shift",
+              "controller_name": "RunwayConditionChange",
+              "description": "跑道条件变化",
+              "termination_condition":"maintain"
+            }
+          }
+        ]
+      },
+      
+      "ATC_logic_line": {
+        "description": "空中交通管制和实验监控的逻辑线",
+        "line_type": "atc_control",
+        "logic_sequence": [
+          {
+            "event_id": 1,
+            "event_name": "IssueTaxiClearance",
+            "description": "发放滑行许可", 
+            "trigger_condition": {
+              "condition_expression": "time > 1.0",
+              "description": "开始1秒后"
+            },
+            "driven_process": {
+              "controller_type": "ATC_command",
+              "controller_name": "ClearanceController",
+              "description": "ATC发放滑行许可",
+              "termination_condition":"maintain"
+            }
+          },
+          {
+            "event_id": 2,
+            "event_name": "EmergencyBrakeCommand",
+            "description": "紧急刹车指令",
+            "trigger_condition": {
+              "condition_expression": "distance > 1200.0",
+              "description": "飞机刚滑行到1200米必须紧急刹车"
+            },
+            "driven_process": {
+              "controller_type": "ATC_command",
+              "controller_name": "EmergencyBrakeCommand",
+              "description": "紧急刹车指令",
+              "termination_condition":"maintain"
+            }
+          }
+        ]
+      }
+    }
+  }
+} 

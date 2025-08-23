@@ -1,0 +1,48 @@
+# Build outputs
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# Output directories
+output/
+lib/
+build/
+dist/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log files
+*.log
+*.tmp
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+
+# Data files (if large)
+*.csv
+*.dat
+*.bin
+
+# Configuration files with sensitive data
+config/local/
+*.env

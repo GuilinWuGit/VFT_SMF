@@ -1,0 +1,21 @@
+{
+    "simulation_config": {
+        "flight_plan_file": "input/FlightPlan.json",
+        "log_config": {
+            "brief_log_file": "output/Brief.log",
+            "detail_log_file": "output/Detail.log",
+            "console_output": true,
+            "enable_logging": true
+        },
+        "data_recorder_config": {
+            "output_directory": "output",
+            "buffer_size": 12000
+        },
+        "simulation_params": {
+            "time_scale": 2.0,
+            "time_step": 0.01,
+            "max_simulation_time": 60.0,
+            "sync_tolerance": 0.002
+        }
+    }
+}

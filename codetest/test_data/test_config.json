@@ -1,0 +1,164 @@
+{
+  "test_configuration": {
+    "project_name": "VFT_SMF V3",
+    "test_framework": "Google Test",
+    "compiler": "g++",
+    "cxx_standard": "C++17",
+    "test_types": {
+      "unit_tests": {
+        "enabled": true,
+        "coverage_target": 85,
+        "timeout_seconds": 300
+      },
+      "integration_tests": {
+        "enabled": true,
+        "coverage_target": 75,
+        "timeout_seconds": 600
+      },
+      "performance_tests": {
+        "enabled": true,
+        "benchmark_thresholds": {
+          "time_advancement": 100000,
+          "control_commands": 20000,
+          "data_recording": 5000,
+          "simulation_loop": 2000
+        },
+        "timeout_seconds": 1200
+      },
+      "regression_tests": {
+        "enabled": true,
+        "baseline_file": "baseline_results.json",
+        "timeout_seconds": 900
+      }
+    },
+    "test_modules": {
+      "aircraft": {
+        "priority": "high",
+        "test_files": [
+          "test_b737_digital_twin.cpp",
+          "test_control_priority_manager.cpp"
+        ],
+        "coverage_target": 90
+      },
+      "pilot": {
+        "priority": "high",
+        "test_files": [
+          "test_pilot_manual_control.cpp"
+        ],
+        "coverage_target": 85
+      },
+      "atc": {
+        "priority": "medium",
+        "test_files": [],
+        "coverage_target": 80
+      },
+      "environment": {
+        "priority": "medium",
+        "test_files": [],
+        "coverage_target": 75
+      },
+      "simulation": {
+        "priority": "high",
+        "test_files": [
+          "test_simulation_clock.cpp"
+        ],
+        "coverage_target": 95
+      }
+    },
+    "integration_tests": {
+      "test_files": [
+        "test_simulation_workflow.cpp"
+      ]
+    },
+    "performance_tests": {
+      "test_files": [
+        "test_simulation_performance.cpp"
+      ]
+    },
+    "test_environment": {
+      "platform": "Windows",
+      "compiler_version": "g++ 8.0+",
+      "google_test_version": "1.11.0+",
+      "required_libraries": [
+        "pthread"
+      ],
+      "optional_libraries": [
+        "gmock"
+      ]
+    },
+    "test_data": {
+      "input_files": [
+        "test_flight_plan.json",
+        "test_simulation_config.json"
+      ],
+      "expected_outputs": [
+        "test_aircraft_state.csv",
+        "test_control_commands.csv"
+      ]
+    },
+    "performance_benchmarks": {
+      "time_advancement": {
+        "target_steps_per_second": 100000,
+        "acceptable_steps_per_second": 50000
+      },
+      "control_commands": {
+        "target_commands_per_second": 20000,
+        "acceptable_commands_per_second": 10000
+      },
+      "data_recording": {
+        "target_records_per_second": 5000,
+        "acceptable_records_per_second": 2500
+      },
+      "simulation_loop": {
+        "target_steps_per_second": 2000,
+        "acceptable_steps_per_second": 1000
+      },
+      "real_time": {
+        "target_fps": 60,
+        "acceptable_fps": 30
+      }
+    },
+    "test_reporting": {
+      "output_formats": [
+        "xml",
+        "json",
+        "html"
+      ],
+      "coverage_reporting": {
+        "enabled": true,
+        "output_format": "html",
+        "exclude_patterns": [
+          "*/test_*",
+          "*/mock_*",
+          "*/stub_*"
+        ]
+      },
+      "performance_reporting": {
+        "enabled": true,
+        "output_format": "json",
+        "include_benchmarks": true
+      }
+    },
+    "continuous_integration": {
+      "github_actions": {
+        "enabled": true,
+        "workflow_file": ".github/workflows/tests.yml",
+        "triggers": [
+          "push",
+          "pull_request"
+        ]
+      },
+      "test_automation": {
+        "auto_run_on_commit": true,
+        "notify_on_failure": true,
+        "generate_reports": true
+      }
+    },
+    "test_maintenance": {
+      "update_frequency": "weekly",
+      "review_coverage": true,
+      "update_baselines": true,
+      "cleanup_old_tests": true
+    }
+  }
+}
