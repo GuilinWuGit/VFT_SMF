@@ -5,7 +5,9 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 
 ## 🚀 开发者团队
-南京航空航天大学虚拟试飞开源项目团队。
+本项目由南京航空航天大学虚拟试飞开源项目团队发起。
+由XXX、XXX等核心共享者共同组成开发团队。
+开发者团队联系人：guilinwu@nuaa.edu.cn
 
 ## 🚀 概述
 
