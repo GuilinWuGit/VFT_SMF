@@ -1,4 +1,4 @@
-# VFT_SMF - 虚拟试飞仿真与建模框架
+# VFT_SMF   虚拟试飞仿真与建模框架
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
@@ -171,7 +171,7 @@ cd codetest
 
 ---
 
-# VFT_SMF - Virtual Flight Test Simulation and Modeling Framework
+# VFT_SMF  - Virtual Flight Test Simulation and Modeling Framework
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
