@@ -156,7 +156,10 @@ void environment_thread_function(std::shared_ptr<GlobalShared_DataSpace::GlobalS
     // 启动环境代理
     environment_agent.start();
     
-    logBrief(LogLevel::Brief, "环境代理创建完成并已启动");
+    // 环境代理初始化后立即运行一次更新，计算出基于初始状态的动态数据并覆盖共享数据空间
+    environment_agent.update(0.0); // 运行一次初始更新
+    
+    logBrief(LogLevel::Brief, "环境代理创建完成并已启动，初始状态已计算并更新到共享数据空间");
     
     // 设置线程就绪状态
     environment_thread_ready = true;
@@ -327,6 +330,32 @@ void flight_dynamics_thread_function(std::shared_ptr<GlobalShared_DataSpace::Glo
     VFT_SMF::FlightDynamics::FlightDynamicsAgent fd_agent("B737");
     auto initial_state = shared_data_space->getAircraftFlightState();
     fd_agent.initialize(initial_state);
+    
+    // 代理初始化后立即运行一次更新，计算出基于初始状态的动态数据并覆盖共享数据空间
+    const auto system_state = shared_data_space->getAircraftSystemState();
+    const auto env_state = shared_data_space->getEnvironmentState();
+    auto updated_state = fd_agent.updateFromGlobalState(0.0, system_state, env_state);
+    shared_data_space->setAircraftFlightState(updated_state, "flight_dynamics_initial");
+    
+    // 计算并发布初始六分量合外力
+    auto forces = fd_agent.getCurrentForces();
+    VFT_SMF::GlobalSharedDataStruct::AircraftNetForce net_force;
+    net_force.longitudinal_force = forces.force_x;
+    net_force.lateral_force = forces.force_y;
+    net_force.vertical_force = forces.force_z;
+    net_force.roll_moment = forces.moment_x;
+    net_force.pitch_moment = forces.moment_y;
+    net_force.yaw_moment = forces.moment_z;
+    net_force.thrust_force = (forces.force_x > 0.0) ? forces.force_x : 0.0;
+    net_force.drag_force = (forces.force_x < 0.0) ? -forces.force_x : 0.0;
+    net_force.lift_force = (forces.force_z > 0.0) ? forces.force_z : 0.0;
+    // 使用系统状态中的质量推导重量（向下为负号）
+    net_force.weight_force = -system_state.current_mass * 9.81;
+    net_force.side_force = forces.force_y;
+    net_force.timestamp = VFT_SMF::SimulationTimePoint{};
+    shared_data_space->setAircraftNetForce(net_force, "flight_dynamics_initial");
+    
+    logBrief(LogLevel::Brief, "飞行动力学代理初始状态计算完成并已更新到共享数据空间");
     
     // 设置线程就绪状态
     flight_dynamics_thread_ready = true;
@@ -502,6 +531,14 @@ void aircraft_system_thread_function(std::shared_ptr<GlobalShared_DataSpace::Glo
     
     // 启动飞机代理
     ACSystem_agent.start();
+    
+    // 飞机系统代理初始化后立即运行一次更新，计算出基于初始状态的动态数据并覆盖共享数据空间
+    ACSystem_agent.update(0.0); // 运行一次初始更新
+    ACSystem_agent.updateAircraftSystemState();
+    auto initial_system_state = ACSystem_agent.getAircraftSystemState();
+    shared_data_space->setAircraftSystemState(initial_system_state, "aircraft_system_initial");
+    
+    logBrief(LogLevel::Brief, "飞机系统代理初始状态计算完成并已更新到共享数据空间");
     
     // 设置线程就绪状态
     aircraft_system_thread_ready = true;
@@ -814,6 +851,11 @@ void pilot_thread_function(std::shared_ptr<GlobalShared_DataSpace::GlobalSharedD
     std::unique_ptr<PilotManualControlHandler> pilot_manual_control_handler =
         std::make_unique<PilotManualControlHandler>(shared_data_space);
     
+    // 飞行员代理初始化后立即运行一次更新，计算出基于初始状态的动态数据并覆盖共享数据空间
+    pilot_agent.update(0.0); // 运行一次初始更新
+    
+    logBrief(LogLevel::Brief, "飞行员代理初始状态计算完成并已更新到共享数据空间");
+    
     // 设置线程就绪状态
     pilot_thread_ready = true;
     logBrief(LogLevel::Brief, "飞行员代理已创建并启动");
@@ -988,6 +1030,11 @@ void atc_thread_function(std::shared_ptr<GlobalShared_DataSpace::GlobalSharedDat
     
     atc_agent.initialize();
     atc_agent.start();
+    
+    // ATC代理初始化后立即运行一次更新，计算出基于初始状态的动态数据并覆盖共享数据空间
+    atc_agent.update(0.0); // 运行一次初始更新
+    
+    logBrief(LogLevel::Brief, "ATC代理初始状态计算完成并已更新到共享数据空间");
     
     // 设置线程就绪状态
     atc_thread_ready = true;

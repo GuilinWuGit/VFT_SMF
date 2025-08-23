@@ -10,10 +10,12 @@
 #define B737_DIGITAL_TWIN_HPP
 
 #include "../IAircraftDigitalTwin.hpp"
-#include "../AircraftAgent.hpp"
+#include "../BasicTypes.hpp"
 #include "DataTwin/B737_DigitalTwin.hpp"
 #include "ModelTwin/FlightControl/B737_AutoFlightControlLaw.hpp"
 #include "ServiceTwin/ServiceTwin_StateManager.hpp"
+#include "../../I_ThirdPartyTools/json.hpp"
+#include "../../E_GlobalSharedDataSpace/GlobalSharedDataSpace.hpp"
 #include <memory>
 #include <string>
 
@@ -37,6 +39,9 @@ namespace VFT_SMF {
         
         // ==================== 服务层组件 ====================
         std::unique_ptr<ServiceTwin_StateManager> state_manager;
+        
+        // ==================== 全局共享数据空间引用 ====================
+        std::shared_ptr<VFT_SMF::GlobalShared_DataSpace::GlobalSharedDataSpace> global_data_space;
         
         // ==================== 状态管理 ====================
         bool initialized;
@@ -134,6 +139,11 @@ namespace VFT_SMF {
         // ==================== 飞机系统状态更新接口 ====================
         void updateAircraftSystemState() override;
 
+        // ==================== 全局数据空间设置接口 ====================
+        void set_global_data_space(std::shared_ptr<VFT_SMF::GlobalShared_DataSpace::GlobalSharedDataSpace> data_space) {
+            global_data_space = data_space;
+        }
+
         // ==================== B737特有方法 ====================
         std::string get_aircraft_id() const { return aircraft_id; }
         std::string get_aircraft_name() const { return aircraft_name; }
@@ -149,6 +159,7 @@ namespace VFT_SMF {
         // ==================== 私有辅助方法 ====================
         void initialize_components();
         void update_cached_states();
+        void set_default_cached_states();
         void validate_initialization() const;
     };
 

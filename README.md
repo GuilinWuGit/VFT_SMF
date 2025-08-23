@@ -4,7 +4,7 @@
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 
-## 🚀 开发者团队
+## 🚀 开发团队
 本开源项目由 南京航空航天大学虚拟试飞团队 发起。由 XXX、XXX 等核心贡献者共同组成开发团队。开发者团队联系人：guilinwu@nuaa.edu.cn
 
 ## 🚀 概述

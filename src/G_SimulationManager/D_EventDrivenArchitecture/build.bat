@@ -28,6 +28,7 @@ g++ -std=c++17 -I../../src -I../../src/I_ThirdPartyTools -o EventDrivenSimulatio
 ../../src/B_AircraftAgentModel/B737/ServiceTwin/ServiceTwin_StateManager.cpp ^
 ../../src/B_AircraftAgentModel/B737/ServiceTwin/ControlPriorityManager.cpp ^
 ../../src/C_EnvirnomentAgentModel/EnvironmentAgent.cpp ^
+../../src/C_EnvirnomentAgentModel/EnvironmentConfigManager.cpp ^
 ../../src/D_ATCAgentModel/A_StandardBase/ATCAgent.cpp ^
 ../../src/D_ATCAgentModel/ATC_001/ATC_001_Strategy.cpp ^
 ../../src/D_ATCAgentModel/ATC_002/ATC_002_Strategy.cpp ^

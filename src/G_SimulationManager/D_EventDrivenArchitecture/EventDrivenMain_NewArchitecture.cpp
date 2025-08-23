@@ -110,26 +110,44 @@ int main() {
         
         std::cout << "\n主函数步骤6: Simulation_Clock创建完成" << std::endl;
         
-        // ==================== 步骤7: 创建线程：5大代理 + 2大处理单元 ====================  
-        std::thread pilot_thread              (VFT_SMF::pilot_thread_function,              shared_data_space_ptr);    // 代理模型：人（飞行员），未来可以升级为分布式仿真系统中的飞行员系统   
-        std::thread aircraft_system_thread    (VFT_SMF::aircraft_system_thread_function,    shared_data_space_ptr);    // 代理模型：机（飞机系统），未来可以升级为分布式仿真系统中的飞机系统
+        // ==================== 步骤7: 按依赖关系逐个创建代理并等待就绪 ====================
+        // 第一层：环境代理（无依赖）
         std::thread environment_thread        (VFT_SMF::environment_thread_function,        shared_data_space_ptr);    // 代理模型：环（环境），未来可以升级为分布式仿真系统中的环境系统
-        std::thread atc_thread                (VFT_SMF::atc_thread_function,                shared_data_space_ptr);    // 代理模型：控（ATC），未来可以升级为分布式仿真系统中的ATC系统
-        std::thread flight_dynamics_thread    (VFT_SMF::flight_dynamics_thread_function,    shared_data_space_ptr);    // 代理模型：动（飞行动力学），未来可以升级为分布式仿真系统中的飞行动力学系统
-        std::thread event_monitor_thread      (VFT_SMF::event_monitor_thread_function,      shared_data_space_ptr);    // 处理单元：事件监测，未来可以升级为分布式仿真系统中的中央事件监测系统
-        std::thread event_dispatcher_thread   (VFT_SMF::event_dispatcher_thread_function, shared_data_space_ptr);    // 处理单元：事件分发，未来可以升级为分布式仿真系统中的中央事件分发系统
-        
-        std::cout << "\n主函数步骤7: 各线程创建完成" << std::endl;
-               
-        // ==================== 步骤8: 等待所有线程就绪（若不等待，则可能线程未就绪就启动了仿真时钟，导致仿真异常） ====================
-        
         VFT_SMF::wait_for_environment_thread_ready();
-        VFT_SMF::wait_for_flight_dynamics_thread_ready();
+        std::cout << "\n主函数步骤7.1: 环境代理初始化完成" << std::endl;
+        
+        // 第二层：飞机系统代理（依赖环境）
+        std::thread aircraft_system_thread    (VFT_SMF::aircraft_system_thread_function,    shared_data_space_ptr);    // 代理模型：机（飞机系统），未来可以升级为分布式仿真系统中的飞机系统
         VFT_SMF::wait_for_aircraft_system_thread_ready();
-        VFT_SMF::wait_for_event_monitor_thread_ready();
-        VFT_SMF::wait_for_event_dispatcher_thread_ready();
+        std::cout << "\n主函数步骤7.2: 飞机系统代理初始化完成" << std::endl;
+        
+        // 第三层：飞行动力学代理（依赖飞机系统和环境）
+        std::thread flight_dynamics_thread    (VFT_SMF::flight_dynamics_thread_function,    shared_data_space_ptr);    // 代理模型：动（飞行动力学），未来可以升级为分布式仿真系统中的飞行动力学系统
+        VFT_SMF::wait_for_flight_dynamics_thread_ready();
+        std::cout << "\n主函数步骤7.3: 飞行动力学代理初始化完成" << std::endl;
+        
+        // 第四层：飞行员代理（依赖飞行动力学）
+        std::thread pilot_thread              (VFT_SMF::pilot_thread_function,              shared_data_space_ptr);    // 代理模型：人（飞行员），未来可以升级为分布式仿真系统中的飞行员系统   
         VFT_SMF::wait_for_pilot_thread_ready();
+        std::cout << "\n主函数步骤7.4: 飞行员代理初始化完成" << std::endl;
+        
+        // 第五层：ATC代理（依赖环境）
+        std::thread atc_thread                (VFT_SMF::atc_thread_function,                shared_data_space_ptr);    // 代理模型：控（ATC），未来可以升级为分布式仿真系统中的ATC系统
         VFT_SMF::wait_for_atc_thread_ready();
+        std::cout << "\n主函数步骤7.5: ATC代理初始化完成" << std::endl;
+        
+        // 第六层：事件处理单元（无严格依赖关系）
+        std::thread event_monitor_thread      (VFT_SMF::event_monitor_thread_function,      shared_data_space_ptr);    // 处理单元：事件监测，未来可以升级为分布式仿真系统中的中央事件监测系统
+        VFT_SMF::wait_for_event_monitor_thread_ready();
+        std::cout << "\n主函数步骤7.6: 事件监测单元初始化完成" << std::endl;
+        
+        std::thread event_dispatcher_thread   (VFT_SMF::event_dispatcher_thread_function, shared_data_space_ptr);    // 处理单元：事件分发，未来可以升级为分布式仿真系统中的中央事件分发系统
+        VFT_SMF::wait_for_event_dispatcher_thread_ready();
+        std::cout << "\n主函数步骤7.7: 事件分发单元初始化完成" << std::endl;
+        
+        std::cout << "\n主函数步骤7: 所有代理线程创建并初始化完成" << std::endl;
+               
+        // ==================== 步骤8: 所有代理已就绪，准备开始仿真 ====================
 
         std::cout << "\n主函数步骤8: 各线程已就绪" << std::endl;
         

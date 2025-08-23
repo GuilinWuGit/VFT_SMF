@@ -2,9 +2,9 @@
   "flight_plan": {
 
     "scenario_config": {
-      "ScenarioName": "滑行场景",
-      "Description": "虚拟飞行测试中的滑行场景",
-      "Author": "吴桂林团队",
+      "ScenarioName": "LevelFlight_Scenario",
+      "Description": "虚拟飞行测试中的水平飞行场景",
+      "Author": "虚拟试飞开源团队",
       "CreationDate": "2025-08-01",
       "ScenarioType": "Virtual_Flight_Testing",
       "Pilot_ID": "Pilot_001",
@@ -19,7 +19,7 @@
         "position": {
           "x": 0.0,
           "y": 0.0, 
-          "z": 0.0,
+          "z": 1000.0,
           "unit": "meter",
           "coordinate_system": "NED"
         },

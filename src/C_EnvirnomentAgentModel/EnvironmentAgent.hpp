@@ -11,6 +11,7 @@
 
 #include "../F_ScenarioModelling/B_ScenarioModel/VFT_SMF_Base.hpp"
 #include "EnvironmentAgent_DataSpace.hpp"
+#include "EnvironmentConfigManager.hpp"
 #include <vector>
 #include <queue>
 #include <random>
@@ -114,6 +115,10 @@ namespace VFT_SMF {
         // 环境数据
         VFT_SMF::EnvirDataSpace::EnvironmentAgentData environment_data;
         VFT_SMF::EnvirDataSpace::EnvironmentAgentConfig config;
+        
+        // 配置管理器
+        std::unique_ptr<EnvironmentConfigManager> config_manager;
+        EnvironmentConfig current_config;
         
         // 全局共享数据空间引用（数据制造者需要访问）
         std::shared_ptr<VFT_SMF::GlobalShared_DataSpace::GlobalSharedDataSpace> global_data_space;

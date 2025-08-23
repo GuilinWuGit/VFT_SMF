@@ -11,6 +11,7 @@
 
 #include "AircraftAgent.hpp"
 #include "AircraftDigitalTwinFactory.hpp"
+#include "B737/B737DigitalTwin.hpp"
 #include "../G_SimulationManager/LogAndData/Logger.hpp"
 #include <iostream>
 #include <sstream>
@@ -441,6 +442,20 @@ namespace VFT_SMF {
         
         VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "飞机代理: 刹车效率降低，brake_efficiency设置为0.5");
         return true;
+    }
+
+    // 设置全局共享数据空间（数据制造者需要）
+    void AircraftAgent::set_global_data_space(std::shared_ptr<VFT_SMF::GlobalShared_DataSpace::GlobalSharedDataSpace> data_space) {
+        shared_data_space = data_space;
+        
+        // 同时设置数字孪生的全局数据空间
+        if (digital_twin) {
+            // 尝试转换为B737数字孪生并设置全局数据空间
+            auto b737_twin = dynamic_cast<B737DigitalTwin*>(digital_twin.get());
+            if (b737_twin) {
+                b737_twin->set_global_data_space(data_space);
+            }
+        }
     }
 
 } // namespace VFT_SMF 

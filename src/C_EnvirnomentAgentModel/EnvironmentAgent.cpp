@@ -67,6 +67,9 @@ namespace VFT_SMF {
         // 创建环境模型
         environment_model = std::make_unique<EnvironmentModel>(type);
         
+        // 创建配置管理器
+        config_manager = std::make_unique<EnvironmentConfigManager>("../../src/C_EnvirnomentAgentModel/");
+        
         // 初始化环境数据
         initialize_environment_data();
         
@@ -324,6 +327,66 @@ namespace VFT_SMF {
     // ==================== 私有方法 ====================
     
     void EnvironmentAgent::initialize_environment_data() {
+        VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, "初始化环境数据");
+        
+        // 尝试从配置文件加载数据
+        if (config_manager && !environment_model_name.empty() && environment_model_name != "Default_Environment") {
+            if (config_manager->load_environment_config(environment_model_name)) {
+                current_config = config_manager->get_environment_config(environment_model_name);
+                
+                VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, "从配置文件加载环境数据: " + environment_model_name);
+                
+                // 从配置文件初始化跑道数据
+                environment_data.runway_data.length = current_config.runway_data.length;
+                environment_data.runway_data.width = current_config.runway_data.width;
+                environment_data.runway_data.surface_type = current_config.runway_data.surface_type;
+                environment_data.runway_data.friction_coefficient = current_config.runway_data.friction_coefficient;
+                environment_data.runway_data.condition = current_config.runway_data.condition;
+                environment_data.runway_data.is_available = current_config.runway_data.is_available;
+                environment_data.runway_data.elevation = current_config.runway_data.elevation;
+                environment_data.runway_data.slope = current_config.runway_data.slope;
+                
+                // 从配置文件初始化大气数据
+                environment_data.atmospheric_data.temperature = current_config.atmospheric_data.temperature;
+                environment_data.atmospheric_data.pressure = current_config.atmospheric_data.pressure;
+                environment_data.atmospheric_data.humidity = current_config.atmospheric_data.humidity;
+                environment_data.atmospheric_data.visibility = current_config.atmospheric_data.visibility;
+                environment_data.atmospheric_data.density_altitude = current_config.atmospheric_data.density_altitude;
+                environment_data.atmospheric_data.dew_point = current_config.atmospheric_data.dew_point;
+                environment_data.atmospheric_data.air_density = current_config.atmospheric_data.air_density;
+                environment_data.atmospheric_data.cloud_cover = current_config.atmospheric_data.cloud_cover;
+                environment_data.atmospheric_data.cloud_base = current_config.atmospheric_data.cloud_base;
+                
+                // 从配置文件初始化风数据
+                environment_data.wind_data.wind_speed = current_config.wind_data.wind_speed;
+                environment_data.wind_data.wind_direction = current_config.wind_data.wind_direction;
+                environment_data.wind_data.gust_speed = current_config.wind_data.gust_speed;
+                environment_data.wind_data.crosswind_component = current_config.wind_data.crosswind_component;
+                environment_data.wind_data.headwind_component = current_config.wind_data.headwind_component;
+                environment_data.wind_data.wind_shear = current_config.wind_data.wind_shear;
+                environment_data.wind_data.wind_condition = current_config.wind_data.wind_condition;
+                environment_data.wind_data.is_turbulent = current_config.wind_data.is_turbulent;
+                
+                // 更新机场和跑道代码
+                airport_code = current_config.environment_model.airport_code;
+                runway_code = current_config.environment_model.runway_code;
+                
+                // 设置环境模型的天气参数
+                if (environment_model) {
+                    environment_model->set_weather_stability(current_config.weather_model.weather_stability);
+                    environment_model->set_change_rate(current_config.weather_model.change_rate);
+                }
+                
+                VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, "配置文件加载成功: " + current_config.environment_model.name);
+                return;
+            } else {
+                VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "配置文件加载失败，使用默认值: " + environment_model_name);
+            }
+        }
+        
+        // 使用默认值（原有的硬编码数据）
+        VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, "使用默认环境数据");
+        
         // 初始化跑道数据
         environment_data.runway_data.length = 3800.0;  // 3800米
         environment_data.runway_data.width = 60.0;     // 60米
@@ -357,15 +420,30 @@ namespace VFT_SMF {
     }
 
     void EnvironmentAgent::update_environment_data(double delta_time) {
-        // 模拟环境数据的实时变化
-        static std::uniform_real_distribution<> temp_change(-0.1, 0.1);
-        static std::uniform_real_distribution<> wind_change(-2.0, 2.0);  // 增加风速扰动幅度
-        static std::uniform_real_distribution<> pressure_change(-0.5, 0.5);
+        // 使用配置文件中的更新参数，如果没有则使用默认值
+        double temp_min = -0.1, temp_max = 0.1;
+        double wind_min = -2.0, wind_max = 2.0;
+        double pressure_min = -0.5, pressure_max = 0.5;
+        
+        // 如果配置文件已加载，使用配置文件中的参数
+        if (config_manager && !environment_model_name.empty() && environment_model_name != "Default_Environment") {
+            temp_min = current_config.update_parameters.temperature_change_range.first;
+            temp_max = current_config.update_parameters.temperature_change_range.second;
+            wind_min = current_config.update_parameters.wind_change_range.first;
+            wind_max = current_config.update_parameters.wind_change_range.second;
+            pressure_min = current_config.update_parameters.pressure_change_range.first;
+            pressure_max = current_config.update_parameters.pressure_change_range.second;
+        }
+        
+        // 创建分布对象
+        std::uniform_real_distribution<> temp_change(temp_min, temp_max);
+        std::uniform_real_distribution<> wind_change(wind_min, wind_max);
+        std::uniform_real_distribution<> pressure_change(pressure_min, pressure_max);
         
         // 温度变化
         environment_data.atmospheric_data.temperature += temp_change(gen) * delta_time;
         
-        // 风速变化 - 增加扰动幅度，使其更容易观察到
+        // 风速变化
         environment_data.wind_data.wind_speed += wind_change(gen) * delta_time;
         environment_data.wind_data.wind_speed = std::max(0.0, environment_data.wind_data.wind_speed);
         
@@ -532,38 +610,69 @@ namespace VFT_SMF {
         
         environment_model_name = model_name;
         
-        // 根据模型名称设置特定的环境参数
-        if (model_name == "PVG_Runway_05") {
-            // 上海浦东机场05跑道特定配置
-            airport_code = "PVG";
-            runway_code = "05";
-            environment_type = EnvironmentType::AIRPORT_RUNWAY;
+        // 使用配置管理器加载环境配置
+        if (config_manager && config_manager->load_environment_config(model_name)) {
+            current_config = config_manager->get_environment_config(model_name);
             
-            // 设置PVG特定的环境参数
-            if (environment_model) {
-                environment_model->set_weather_stability(0.85);  // 上海地区天气相对稳定
-                environment_model->set_change_rate(0.08);        // 变化率适中
+            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: 配置文件加载成功: " + current_config.environment_model.name);
+            
+            // 从配置文件设置环境参数
+            airport_code = current_config.environment_model.airport_code;
+            runway_code = current_config.environment_model.runway_code;
+            
+            // 设置环境类型
+            if (current_config.environment_model.environment_type == "AIRPORT_RUNWAY") {
+                environment_type = EnvironmentType::AIRPORT_RUNWAY;
+            } else if (current_config.environment_model.environment_type == "TERMINAL_AREA") {
+                environment_type = EnvironmentType::TERMINAL_AREA;
+            } else if (current_config.environment_model.environment_type == "APPROACH_ZONE") {
+                environment_type = EnvironmentType::APPROACH_ZONE;
+            } else if (current_config.environment_model.environment_type == "DEPARTURE_ZONE") {
+                environment_type = EnvironmentType::DEPARTURE_ZONE;
+            } else if (current_config.environment_model.environment_type == "ENROUTE_ZONE") {
+                environment_type = EnvironmentType::ENROUTE_ZONE;
             }
             
-            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: PVG_Runway_05模型初始化完成");
-            
-        } else if (model_name == "PEK_Runway_02") {
-            // 北京首都机场02跑道特定配置
-            airport_code = "PEK";
-            runway_code = "02";
-            environment_type = EnvironmentType::AIRPORT_RUNWAY;
-            
-            // 设置PEK特定的环境参数
+            // 设置环境模型的天气参数
             if (environment_model) {
-                environment_model->set_weather_stability(0.75);  // 北京地区天气变化较大
-                environment_model->set_change_rate(0.12);        // 变化率较高
+                environment_model->set_weather_stability(current_config.weather_model.weather_stability);
+                environment_model->set_change_rate(current_config.weather_model.change_rate);
             }
             
-            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: PEK_Runway_02模型初始化完成");
+            // 重新初始化环境数据
+            initialize_environment_data();
+            
+            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: " + model_name + " 模型初始化完成");
             
         } else {
-            // 默认配置
-            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: 使用默认环境模型配置");
+            // 配置文件加载失败，使用默认配置
+            VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: 配置文件加载失败，使用默认配置: " + model_name);
+            
+            // 根据模型名称设置特定的环境参数（原有的硬编码逻辑）
+            if (model_name == "PVG_Runway_05") {
+                airport_code = "PVG";
+                runway_code = "05";
+                environment_type = EnvironmentType::AIRPORT_RUNWAY;
+                
+                if (environment_model) {
+                    environment_model->set_weather_stability(0.85);
+                    environment_model->set_change_rate(0.08);
+                }
+                
+            } else if (model_name == "PEK_Runway_02") {
+                airport_code = "PEK";
+                runway_code = "02";
+                environment_type = EnvironmentType::AIRPORT_RUNWAY;
+                
+                if (environment_model) {
+                    environment_model->set_weather_stability(0.75);
+                    environment_model->set_change_rate(0.12);
+                }
+                
+            } else {
+                // 默认配置
+                VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: 使用默认环境模型配置");
+            }
         }
         
         VFT_SMF::logBrief(VFT_SMF::LogLevel::Brief, "环境代理: 环境模型初始化完成 - " + model_name);
@@ -580,6 +689,12 @@ namespace VFT_SMF {
             config_info += "  - 天气稳定性: " + std::to_string(environment_model->get_weather_stability()) + "\n";
             config_info += "  - 天气变化率: " + std::to_string(environment_model->get_change_rate()) + "\n";
             config_info += "  - 当前天气: " + std::to_string(static_cast<int>(environment_model->get_current_weather())) + "\n";
+        }
+        
+        // 如果配置文件已加载，显示配置文件信息
+        if (config_manager && !environment_model_name.empty() && environment_model_name != "Default_Environment") {
+            config_info += "\n配置文件信息:\n";
+            config_info += config_manager->get_config_summary(environment_model_name);
         }
         
         return config_info;

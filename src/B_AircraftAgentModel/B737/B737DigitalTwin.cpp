@@ -378,16 +378,66 @@ namespace VFT_SMF {
     }
 
     void B737DigitalTwin::update_cached_states() {
-        // 更新缓存的状态数据
-        // 这里应该从各个组件获取最新状态
-        if (state_manager) {
-            // 从状态管理器获取系统状态
-            auto system_state = state_manager->get_system_state("main");
-            // 这里可以根据需要更新缓存状态
-            // 暂时使用默认值
+        // 从飞行计划数据读取初始状态，而不是从状态缓冲区读取
+        if (global_data_space) {
+            auto flight_plan_data = global_data_space->getFlightPlanData();
+            
+            // 从飞行计划的全局初始状态中读取飞机系统初始数据
+            if (flight_plan_data.global_initial_state.find("aircraft") != flight_plan_data.global_initial_state.end()) {
+                try {
+                    // 解析飞机初始状态JSON字符串
+                    auto aircraft_json = nlohmann::json::parse(flight_plan_data.global_initial_state["aircraft"]);
+                    
+                    // 使用飞行计划中的初始值更新缓存
+                    cached_current_mass = 70000.0; // B737典型质量
+                    cached_fuel_remaining = aircraft_json.value("Fuel Quantity", 10000.0);
+                    cached_center_of_gravity = 0.25; // 重心位置
+                    
+                    // 解析刹车状态
+                    std::string brake_status = aircraft_json.value("brake_status", "applied");
+                    cached_brake_pressure = (brake_status == "applied") ? 100.0 : 0.0;
+                    
+                    // 解析起落架状态
+                    std::string landing_gear_pos = aircraft_json.value("landing_gear_position", "down_locked");
+                    cached_gear_position = (landing_gear_pos == "down_locked") ? 1.0 : 0.0;
+                    
+                    // 解析襟翼状态
+                    cached_flap_position = aircraft_json.value("flaps_position", 0.0);
+                    cached_spoiler_position = 0.0; // 扰流板收起
+                    
+                    // 解析操纵面状态
+                    cached_aileron_position = aircraft_json.value("aileron_position", 0.0);
+                    cached_elevator_position = aircraft_json.value("elevator_position", 0.0);
+                    cached_rudder_position = aircraft_json.value("rudder_position", 0.0);
+                    cached_throttle_position = aircraft_json.value("throttle_position", 0.3);
+                    cached_engine_rpm = 0.0;
+                    cached_thrust = 0.0;
+                    cached_power_output = 0.0;
+                    
+                    VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, 
+                        "B737数字孪生从飞行计划更新缓存状态: 油门=" + std::to_string(cached_throttle_position) +
+                        ", 燃油=" + std::to_string(cached_fuel_remaining));
+                } catch (const std::exception& e) {
+                    VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, 
+                        "B737数字孪生解析飞行计划数据失败: " + std::string(e.what()) + "，使用默认值");
+                    // 解析失败时使用默认值
+                    set_default_cached_states();
+                }
+            } else {
+                VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, 
+                    "B737数字孪生未找到飞行计划中的飞机初始状态，使用默认值");
+                // 未找到飞机初始状态时使用默认值
+                set_default_cached_states();
+            }
+        } else {
+            VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, 
+                "B737数字孪生没有全局数据空间，使用默认值");
+            // 没有全局数据空间时使用默认值
+            set_default_cached_states();
         }
-        
-        // 设置一些默认的缓存值
+    }
+    
+    void B737DigitalTwin::set_default_cached_states() {
         cached_current_mass = 70000.0; // B737典型质量
         cached_fuel_remaining = 20000.0; // 典型燃油量
         cached_center_of_gravity = 0.25; // 重心位置
@@ -402,6 +452,9 @@ namespace VFT_SMF {
         cached_engine_rpm = 0.0;
         cached_thrust = 0.0;
         cached_power_output = 0.0;
+        
+        VFT_SMF::logDetail(VFT_SMF::LogLevel::Detail, 
+            "B737数字孪生使用默认缓存状态: 油门=" + std::to_string(cached_throttle_position));
     }
 
     void B737DigitalTwin::validate_initialization() const {
