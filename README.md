@@ -1,7 +1,7 @@
 
 
 # 🚀 VFT_SMF - 基于数字孪生技术的虚拟试飞仿真建模系统
-## Virtual Flight Test Simulation Modeling System Based on Digital Twin Technology
+## Virtual Flight Test Simulation Modeling System Based on Digital Twin
 
 [![GitHub stars](https://img.shields.io/github/stars/GuilinWuGit/VFT_SMF?style=social)](https://github.com/GuilinWuGit/VFT_SMF)
 [![Gitee stars](https://gitee.com/GuilinWu/VFT_SMF/badge/star.svg?theme=white)](https://gitee.com/GuilinWu/VFT_SMF)
@@ -104,12 +104,12 @@ VFT_SMF/
 本项目采用MIT License，详情请见[LICENSE](LICENSE)文件。
 
 ## 👥 联系我们
-- 项目负责人：桂林伍（南京航空航天大学虚拟试飞团队）
+- 项目负责人：吴桂林（南京航空航天大学先进飞行器国防重点实验室虚拟试飞团队）
 - 电子邮箱：guilinwu@nuaa.edu.cn
-- 最新版本：1.0.0 (2024年1月发布)
+- 最新版本：0.1.0 (2025年8月发布)
 
 ## 📈 开发状态
-- **版本**: 1.0.0
+- **版本**: 0.1.0
 - **状态**: 积极开发中
 - **文档**: 完整
 - **测试**: 全面覆盖
