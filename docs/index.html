@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFT_SMF - 虚拟试飞仿真与建模框架</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 60px 0;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .buttons {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .stat {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 VFT_SMF</h1>
+            <p>虚拟试飞仿真与建模框架</p>
+            <p>基于数字孪生和事件驱动的航空仿真平台</p>
+        </div>
+
+        <div class="content">
+            <h2>🎯 项目简介</h2>
+            <p>VFT_SMF（Virtual Flight Test Simulation and Modeling Framework）是一个基于<strong>数字孪生</strong>和<strong>事件驱动架构</strong>的航空仿真平台，专为虚拟试飞和飞行仿真研究设计。</p>
+            
+            <p>本项目采用现代化的C++17标准，结合多线程技术和实时数据处理，为航空仿真领域提供高性能、可扩展的解决方案。</p>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>🏗️ 数字孪生架构</h3>
+                    <p>三层模型设计：数据层、模型层、服务层，实时数据同步，完整的生命周期管理。</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ 事件驱动设计</h3>
+                    <p>异步事件处理，多线程架构，毫秒级事件处理能力，充分利用多核处理器性能。</p>
+                </div>
+                <div class="feature">
+                    <h3>🤖 五代理建模系统</h3>
+                    <p>飞行员、飞机系统、环境、ATC、飞行动力学五大代理，精确模拟复杂航空系统。</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 数据管理</h3>
+                    <p>实时数据记录，可视化分析，配置驱动，JSON配置文件管理，高性能数据采集。</p>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">代理模型</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">架构层次</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">开源</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">C++17</div>
+                    <div class="stat-label">技术标准</div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <a href="https://github.com/GuilinWuGit/VFT_SMF" class="btn">GitHub 仓库</a>
+                <a href="https://gitee.com/GuilinWu/VFT_SMF" class="btn btn-secondary">Gitee 仓库</a>
+                <a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/UserGuide/Quick_Start.md" class="btn">快速开始</a>
+                <a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/DeveloperGuide/Architecture.md" class="btn">架构文档</a>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>🚀 快速开始</h2>
+            <pre><code># 克隆仓库
+git clone https://github.com/GuilinWuGit/VFT_SMF.git
+
+# 进入项目目录
+cd VFT_SMF
+
+# 编译项目
+cd ScenarioExamples/B737_Taxi
+./build.bat
+
+# 运行仿真
+./EventDrivenSimulation_NewArchitecture.exe</code></pre>
+        </div>
+
+        <div class="content">
+            <h2>📚 文档</h2>
+            <ul>
+                <li><a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/UserGuide/Installation_Guide.md">📖 安装指南</a></li>
+                <li><a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/UserGuide/Quick_Start.md">⚡ 快速开始</a></li>
+                <li><a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/DeveloperGuide/Architecture.md">🏗️ 系统架构</a></li>
+                <li><a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/DeveloperGuide/DataFlow.md">📊 数据流向设计</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>🤝 参与贡献</h2>
+            <p>我们欢迎所有形式的贡献！无论是报告Bug、提出功能建议、改进文档，还是提交代码，我们都非常欢迎。</p>
+            <p>请查看我们的<a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/docs/DeveloperGuide/Contributing_Guidelines.md">贡献指南</a>了解更多信息。</p>
+        </div>
+
+        <div class="content">
+            <h2>📄 开源协议</h2>
+            <p>本项目采用 <a href="https://github.com/GuilinWuGit/VFT_SMF/blob/main/LICENSE">MIT License</a> 开源协议。</p>
+        </div>
+    </div>
+</body>
+</html>
