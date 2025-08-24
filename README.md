@@ -1,14 +1,19 @@
 
 
-# VFT_SMF 虚拟试飞-飞行场景建模标准架构  
-## Virtual Flight Testing - Scenario Modelling Framework
+# 🚀 VFT_SMF - 基于数字孪生技术的虚拟试飞仿真建模系统
+## Virtual Flight Test Simulation Modeling System Based on Digital Twin Technology
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
-[![C++17](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org)  
+[![GitHub stars](https://img.shields.io/github/stars/GuilinWuGit/VFT_SMF?style=social)](https://github.com/GuilinWuGit/VFT_SMF)
+[![Gitee stars](https://gitee.com/GuilinWu/VFT_SMF/badge/star.svg?theme=white)](https://gitee.com/GuilinWu/VFT_SMF)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![C++17](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/GuilinWuGit/VFT_SMF)
 
 ## 🚀 项目简介
-VFT_SMF 是一个专为虚拟试飞实验开发的开源仿真平台。本项目采用先进的数字孪生架构，结合事件驱动的多线程仿真机制，支持大规模分布式仿真系统，实现全要素场景下的虚拟试飞实验。
+VFT_SMF（Virtual Flight Test Simulation Modeling Framework）是一个基于**数字孪生技术**的虚拟试飞仿真建模系统。本项目采用先进的数字孪生架构，结合事件驱动的多线程仿真机制，支持大规模分布式仿真系统，实现全要素场景下的虚拟试飞实验。
+
+**核心特色**：通过数字孪生技术实现物理世界与虚拟世界的实时映射，为航空仿真领域提供高性能、高精度的虚拟试飞解决方案。
 
 ## ✨ 核心特性
 - **🔄 数字孪生架构**：包含数据孪生、模型孪生和服务孪生三层架构
