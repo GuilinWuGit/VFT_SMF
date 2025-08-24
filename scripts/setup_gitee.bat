@@ -1,55 +1,56 @@
 @echo off
+chcp 65001 >nul
 echo ========================================
-echo VFT_SMF Gitee开源设置脚本
+echo VFT_SMF Gitee Open Source Setup Script
 echo ========================================
 
 echo.
-echo 请按照以下步骤操作：
+echo Please follow these steps:
 echo.
-echo 1. 首先在Gitee创建仓库：
-echo    - 访问 https://gitee.com
-echo    - 登录您的账号
-echo    - 点击右上角"+"号，选择"新建仓库"
-echo    - 仓库名称: VFT_SMF
-echo    - 仓库介绍: 虚拟试飞仿真与建模框架 - 基于数字孪生和事件驱动的航空仿真平台
-echo    - 仓库属性: 选择"开源"
-echo    - 开发语言: C++
-echo    - 开源协议: MIT License
-echo    - 勾选"使用Readme文件初始化这个仓库"
+echo 1. First, create a repository on Gitee:
+echo    - Visit https://gitee.com
+echo    - Login to your account
+echo    - Click the "+" in the top right, select "New Repository"
+echo    - Repository name: VFT_SMF
+echo    - Repository description: Virtual Flight Test Simulation and Modeling Framework
+echo    - Repository type: Open Source
+echo    - Language: C++
+echo    - License: MIT License
+echo    - Check "Initialize with README"
 echo.
-echo 2. 创建完成后，请输入您的Gitee用户名：
-set /p gitee_username=请输入您的Gitee用户名: 
+echo 2. After creation, please enter your Gitee username:
+set /p gitee_username=Enter your Gitee username: 
 
 echo.
-echo 3. 正在配置Git远程仓库...
+echo 3. Configuring Git remote repository...
 
-REM 查看当前远程仓库
-echo 当前远程仓库配置：
+REM Show current remote repositories
+echo Current remote repository configuration:
 git remote -v
 
 echo.
-echo 4. 添加Gitee远程仓库...
+echo 4. Adding Gitee remote repository...
 git remote add gitee https://gitee.com/%gitee_username%/VFT_SMF.git
 
 echo.
-echo 5. 推送代码到Gitee...
+echo 5. Pushing code to Gitee...
 git push gitee main
 
 echo.
-echo 6. 验证配置...
+echo 6. Verifying configuration...
 git remote -v
 
 echo.
 echo ========================================
-echo 设置完成！
+echo Setup Complete!
 echo ========================================
 echo.
-echo 接下来您可以：
-echo 1. 访问 https://gitee.com/%gitee_username%/VFT_SMF 查看您的仓库
-echo 2. 在仓库页面配置项目信息
-echo 3. 添加项目标签和介绍
-echo 4. 启用Issues和Wiki功能
+echo Next steps:
+echo 1. Visit https://gitee.com/%GuilinWu%/VFT_SMF to view your repository
+echo 2. Configure project information on the repository page
+echo 3. Add project tags and description
+echo 4. Enable Issues and Wiki features
 echo.
-echo 详细指南请查看: docs/Gitee开源指南.md
+echo For detailed guide, see: docs/Gitee开源指南.md
 echo.
 pause

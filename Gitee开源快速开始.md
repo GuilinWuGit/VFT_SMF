@@ -19,6 +19,14 @@
    - ✅ 勾选"使用Readme文件初始化这个仓库"
 
 ### 第三步：运行自动化脚本
+
+#### 方法一：使用PowerShell脚本（推荐，避免乱码）
+```powershell
+# 在项目根目录运行
+powershell -ExecutionPolicy Bypass -File scripts/setup_gitee.ps1
+```
+
+#### 方法二：使用批处理脚本
 ```bash
 # 在项目根目录运行
 scripts/setup_gitee.bat
